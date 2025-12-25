@@ -1,1 +1,1 @@
-# Legacey Code
+# Legacy Code
