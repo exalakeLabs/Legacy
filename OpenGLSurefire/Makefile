@@ -1,4 +1,4 @@
-APP_NAME = maiden
+APP_NAME = surefire
 
 CXX      = g++
 CXXFLAGS = -std=c++11 -Wall -Wextra -O2
@@ -6,7 +6,7 @@ CXXFLAGS = -std=c++11 -Wall -Wextra -O2
 # macOS frameworks for legacy OpenGL + GLUT
 FRAMEWORKS = -framework OpenGL -framework GLUT
 
-SRC = maiden.cpp sgi.cpp
+SRC = surefire.cpp sgi.cpp
 OBJ = $(SRC:.cpp=.o)
 
 all: clean $(APP_NAME)

@@ -1,9 +1,8 @@
 /* 
-    maiden.c
+    surefire.c
     Nate Robins, 1997
 
-    A killer "Iron Maiden rocks out with OpenGL" demo (according to
-    Mark Kilgard).
+    OpenGL demo: center sphere with orbiting spheres (Surefire).
 
  */
 
@@ -32,8 +31,8 @@
 #endif
 
 #define GL_SILENCE_DEPRECATION
-#define Ri  4				/* inner radius of torus */
-#define Ro  8				/* outer radius of torus */
+#define Ri  4				/* radius of orbiting spheres */
+#define Ro  8				/* size / radius of central cube and ring */
 
 #define COLORS 12
 #define color(c)  glColor3ubv(colors[COLORS/num_spheres*c])
@@ -67,7 +66,7 @@ GLfloat spin_y = 0;
 GLfloat spin_x = 0;
 GLfloat spin_z = 0;
 
-GLint num_spheres = 120;
+GLint num_spheres = 3;
 GLint num_textures = 4;
 GLenum mode = GL_MODULATE;		/* modulate, decal */
 GLenum filter = GL_LINEAR;		/* texture filtering mode */
@@ -244,16 +243,18 @@ display(void)
     }
 
     glRotatef(spin_y, 0, 1, 0);
+    /* center sphere */
+    glPushMatrix();
     glColor3ub(196, 196, 196);
-    glutSolidTorus(Ri, Ro, lod, lod);
+    sphere(1);
+    glPopMatrix();
 
     step = 360.0/num_spheres;
     for (i = 0; i < num_spheres; i++) {
 	glPushMatrix();
-	glRotatef(step*i+spin_z, 0, 0, 1);
-	glTranslatef(0, Ro, 0);
+	glRotatef(step*i+spin_z, 0, 1, 0);
+	glTranslatef(0, 0, Ro);
 	glRotatef(step*i+spin_x, 1, 0, 0);
-	glTranslatef(0, Ri+Ri, 0);
 	color(i);
 	sphere(i%num_textures+1);
 	glPopMatrix();
@@ -453,7 +454,7 @@ main(int argc, char** argv)
     glutInitWindowPosition(50, 50);
     glutInitWindowSize(320, 320);
 
-    glutCreateWindow("Maiden");
+    glutCreateWindow("Surefire");
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
     glutSpecialFunc(special);
