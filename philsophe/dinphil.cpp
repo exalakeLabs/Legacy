@@ -1,78 +1,81 @@
-#include <windows.h>
-#include <stdlib.h>
-#include <iostream.h>
+// Cross-platform dining philosophers (version 1)
+#include <chrono>
+#include <cstdlib>
+#include <ctime>
+#include <iostream>
+#include <mutex>
+#include <thread>
+#include <vector>
 
-const int numPhil = 5;
-const int MIN = 100;  // min # of millisec to think and eat
-HANDLE cs[numPhil];
+namespace {
+
+constexpr int numPhil = 5;
+constexpr int MIN_MS = 100;  // min # of millisec to think and eat
+
+std::mutex cs[numPhil];
 char csStat[numPhil + 1];
 char pStat[numPhil + 1];
 
-void PhilosopherThread(int id)
-{
+int randomDelayMs() {
+  return MIN_MS + std::rand() % 50;
+}
+
+void PhilosopherThread(int id) {
   int id2 = (id + 1) % numPhil;
-  while (1)
-  {
-    //thinking
-    Sleep(GetTickCount() % 50 + MIN);
+  while (true) {
+    // thinking
+    std::this_thread::sleep_for(std::chrono::milliseconds(randomDelayMs()));
 
     // hungry, so picks up chopsticks
-    WaitForSingleObject(cs[id], INFINITE);
+    std::unique_lock<std::mutex> left(cs[id], std::defer_lock);
+    std::unique_lock<std::mutex> right(cs[id2], std::defer_lock);
+    std::lock(left, right);
+
     csStat[id] = '1';
-    WaitForSingleObject(cs[id2], INFINITE);
     csStat[id2] = '1';
     pStat[id] = '1';
-    cout << csStat << "  " << pStat << endl;
+    std::cout << csStat << "  " << pStat << std::endl;
 
     // eating
-    Sleep(GetTickCount() % 50 + MIN);
+    std::this_thread::sleep_for(std::chrono::milliseconds(randomDelayMs()));
 
     // done eating
     pStat[id] = '0';
-    ReleaseMutex(cs[id]);
     csStat[id] = '0';
-    ReleaseMutex(cs[id2]);
     csStat[id2] = '0';
+    // mutexes released automatically by unique_lock destructors
   }
 }
 
-void main(void)
-{ 
-  int i;
+}  // namespace
+
+int main() { 
+  std::srand(static_cast<unsigned>(std::time(nullptr)));
 
   // Init output
-  for (i = 0; i < numPhil; i++) {
+  for (int i = 0; i < numPhil; ++i) {
     csStat[i] = '0';
     pStat[i] = '0';
   }
   csStat[numPhil] = '\0';
   pStat[numPhil] = '\0';
 
-  cout << "chops  phils" << endl;
-  cout << "busy   eating" << endl;
-  cout << "-----  -----" << endl;
+  std::cout << "chops  phils" << std::endl;
+  std::cout << "busy   eating" << std::endl;
+  std::cout << "-----  -----" << std::endl;
 
-  // Create chopstick mutexes
-  for (i = 0; i < numPhil; i++)
-    cs[i] = CreateMutex(0, FALSE, 0);
+  std::vector<std::thread> threads;
+  threads.reserve(numPhil);
 
-  HANDLE handles[numPhil];
-  DWORD threadID;
   // Create philosopher threads
-  for (i = 0; i < numPhil; i++)
-  {
-    // Create philosopher threads
-    handles[i] = CreateThread(0, 0,
-      (LPTHREAD_START_ROUTINE) PhilosopherThread, 
-      (VOID *) i, 0, &threadID);
+  for (int i = 0; i < numPhil; ++i) {
+    threads.emplace_back(PhilosopherThread, i);
   }
 
-  // Wait for all threads to finish execution
-  WaitForMultipleObjects(numPhil, handles, 
-    TRUE, INFINITE);  
+  // Wait for all threads to finish execution (these threads run indefinitely)
+  for (auto& t : threads) {
+    t.join();
+  }
 
-  for (i = 0; i < numPhil; i++)
-    CloseHandle(cs[i]);
-
-  cout << "Done" << endl;
+  return 0;
 }

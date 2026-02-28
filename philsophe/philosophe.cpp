@@ -1,62 +1,43 @@
-#include <windows.h>
-#include <stdlib.h>
-#include <iostream.h>
+// Cross-platform philosophers demo
 
-volatile INT count;
-CRITICAL_SECTION critSec;
+#include <atomic>
+#include <chrono>
+#include <iostream>
+#include <mutex>
+#include <thread>
+#include <vector>
 
-const int NUM_PHILO = 5;
+namespace {
 
+constexpr int NUM_PHILO = 5;
+constexpr int NUM_BOUCHEE = 100;
 
-static const int NUM_BOUCHEE = 100;
+std::mutex critSec;
+std::atomic<int> count{0};
 
-HANDLE hMutexPoles[NUM_PHILO];
+void Philosophe(int id) {
+  std::cout << "My Philosophe ID is : " << id << std::endl;
 
-
-void Philosophe(INT id)
-{
-	cout << "My Philisophe ID is : " << id << endl; 
-
-	for ( int i = 0 ; i < NUM_BOUCHEE ; i++)
-	{
-
-	}
-		
-	
-	EnterCriticalSection(&critSec);
-
-	LeaveCriticalSection(&critSec);
+  for (int i = 0; i < NUM_BOUCHEE; ++i) {
+    std::lock_guard<std::mutex> lock(critSec);
+    ++count;
+  }
 }
 
+}  // namespace
 
-void main(void)
-{
-  HANDLE hPhilisophe[NUM_PHILO];
-  DWORD threadID;
-  INT i;
+int main() {
+  std::vector<std::thread> philosophers;
+  philosophers.reserve(NUM_PHILO);
 
-  InitializeCriticalSection(&critSec);
-	
-  for ( int h = 0 ; h < NUM_PHILO ; h++)
-  {
-	  hMutexPoles[h] = CreateMutex(0, FALSE, 0);
+  for (int i = 0; i < NUM_PHILO; ++i) {
+    philosophers.emplace_back(Philosophe, i);
   }
 
-
-  for (i=0; i< NUM_PHILO; i++)
-  {
-    // create a thread and pass it the pointer 
-    // to its "params" stru
-    hPhilisophe[i]=CreateThread(0, 0,
-      (LPTHREAD_START_ROUTINE) Philosophe, 
-       (VOID *) i, 0, &threadID);
+  for (auto& t : philosophers) {
+    t.join();
   }
 
-  
-  // wait for all threads to finish execution
-  WaitForMultipleObjects(NUM_PHILO, hPhilosophe, TRUE, INFINITE);  
-
-  DeleteCriticalSection(&critSec);
-
-  cout << "Dinner done..." << endl;
+  std::cout << "Dinner done... total bites = " << count.load() << std::endl;
+  return 0;
 }
