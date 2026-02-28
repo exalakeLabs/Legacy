@@ -12,7 +12,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+/* Platform-specific OpenGL/GLUT includes */
+#if defined(__APPLE__)
+#define GL_SILENCE_DEPRECATION
+#include <GLUT/glut.h>
+#else
 #include <GL/glut.h>
+#endif
+
 #include "sgi.h"
 
 
@@ -23,9 +31,9 @@
 #define GL_REPLACE_EXT GL_REPLACE
 #endif
 
-
-#define Ri  4				/* inner radius of torus */
-#define Ro  8				/* outer radius of torus */
+#define GL_SILENCE_DEPRECATION
+#define Ri  32				/* inner radius of torus */
+#define Ro  64				/* outer radius of torus */
 
 #define COLORS 12
 #define color(c)  glColor3ubv(colors[COLORS/num_spheres*c])
@@ -54,19 +62,19 @@ star stars[num_stars];
 
 GLubyte* background;
 
-GLuint  lod = 16;			/* level of detail */
+GLuint  lod = 32;			/* level of detail */
 GLfloat spin_y = 0;
 GLfloat spin_x = 0;
 GLfloat spin_z = 0;
 
-GLint num_spheres = 12;
+GLint num_spheres = 120240;
 GLint num_textures = 4;
 GLenum mode = GL_MODULATE;		/* modulate, decal */
 GLenum filter = GL_LINEAR;		/* texture filtering mode */
 
 GLboolean drawbackground = GL_FALSE;	/* draw background image? */
 GLboolean drawstars = GL_FALSE;		/* draw stars? */
-GLboolean texturing = GL_FALSE;		/* texturing? */
+GLboolean texturing = GL_TRUE;		/* texturing? */
 GLboolean perftiming = GL_TRUE;		/* performance timing? */
 GLboolean frozen = GL_FALSE;		/* animation frozen? */
 
@@ -85,11 +93,10 @@ sphere(GLuint texture)
 }
 
 char texnames[4][64] = {
-    "128/deadone.sgi",
-    "128/virus.sgi",
-    "128/ace.sgi",
-	"128/hubcap.rgb",
-//    "128/space.sgi",
+    "256/deadone.sgi",
+    "256/virus.sgi",
+    "256/ace.sgi",
+    "256/space.sgi",
 };
 
 void
@@ -126,6 +133,7 @@ init(void)
     glMaterialfv(GL_FRONT, GL_AMBIENT, Ka);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
+    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, mode);
 }
 
 void
@@ -434,10 +442,11 @@ menu(int value)
 int
 main(int argc, char** argv)
 {
+    /* GLUT must be initialized before any other GLUT calls */
+    glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_DEPTH | GLUT_RGBA);
     glutInitWindowPosition(50, 50);
     glutInitWindowSize(320, 320);
-    glutInit(&argc, argv);
 
     glutCreateWindow("Maiden");
     glutDisplayFunc(display);
