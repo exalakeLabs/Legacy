@@ -6,6 +6,13 @@ __pycache__/
 # C extensions
 *.so
 
+# macOS metadata
+.DS_*
+
+# Project binaries (executables and objects)
+OpenGLExample_Maiden/maiden
+OpenGLExample_Maiden/*.o
+
 # Distribution / packaging
 .Python
 build/
