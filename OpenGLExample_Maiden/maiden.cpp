@@ -32,24 +32,24 @@
 #endif
 
 #define GL_SILENCE_DEPRECATION
-#define Ri  32				/* inner radius of torus */
-#define Ro  64				/* outer radius of torus */
+#define Ri  4				/* inner radius of torus */
+#define Ro  8				/* outer radius of torus */
 
 #define COLORS 12
 #define color(c)  glColor3ubv(colors[COLORS/num_spheres*c])
 GLubyte colors[COLORS][3] = {
-    255, 0, 0,
-    255, 128, 0,
-    255, 255, 0,
-    128, 255, 0,
-    0, 255, 0,
-    0, 255, 128,
-    0, 255, 255,
-    0, 128, 255,
-    0, 0, 255,
-    128, 0, 255,
-    255, 0, 255,
-    255, 0, 128,
+    {255, 0, 0},
+    {255, 128, 0},
+    {255, 255, 0},
+    {128, 255, 0},
+    {0, 255, 0},
+    {0, 255, 128},
+    {0, 255, 255},
+    {0, 128, 255},
+    {0, 0, 255},
+    {128, 0, 255},
+    {255, 0, 255},
+    {255, 0, 128},
 };
 
 typedef struct _star {
@@ -67,7 +67,7 @@ GLfloat spin_y = 0;
 GLfloat spin_x = 0;
 GLfloat spin_z = 0;
 
-GLint num_spheres = 120240;
+GLint num_spheres = 120;
 GLint num_textures = 4;
 GLenum mode = GL_MODULATE;		/* modulate, decal */
 GLenum filter = GL_LINEAR;		/* texture filtering mode */
@@ -217,7 +217,7 @@ display(void)
 
 	if (perftiming) {
 	    glColor3ub(255, 255, 255);
-	    sprintf(s, "%.1f", 1.0/((float)(end-last)/1000.0));
+	    snprintf(s, sizeof(s), "%.1f", 1.0f / (((float)(end - last)) / 1000.0f));
 	    glRasterPos2i(5, 5);
 	    for (p = s; *p; p++)
 		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *p);
@@ -321,7 +321,8 @@ pixels(void)
 	    /* XXX skip past bitmap tokens */
 	    i += 2;
 	} else {
-	    printf("unknown token found 0x%x at %d!\n", buffer[i], i);
+	    unsigned int token = (unsigned int)buffer[i];
+	    printf("unknown token found 0x%x at %d!\n", token, i);
 	    i++;
 	}
     }
@@ -350,6 +351,8 @@ idle(void)
 void
 keyboard(unsigned char key, int x, int y)
 {
+    (void)x;
+    (void)y;
     switch (key) {
     case 27:
 	free(background);
@@ -413,6 +416,8 @@ keyboard(unsigned char key, int x, int y)
 void
 special(int value, int x, int y)
 {
+    (void)x;
+    (void)y;
     switch (value) {
     case GLUT_KEY_UP:
 	lod++;
