@@ -9,7 +9,7 @@ FRAMEWORKS = -framework OpenGL -framework GLUT
 SRC = maiden.cpp sgi.cpp
 OBJ = $(SRC:.cpp=.o)
 
-all: $(APP_NAME)
+all: clean $(APP_NAME)
 
 $(APP_NAME): $(OBJ)
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(FRAMEWORKS)
