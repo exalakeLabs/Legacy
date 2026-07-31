@@ -12,8 +12,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build philsophe (C++17 concurrency demos)
-        working-directory: philsophe
+        working-directory: C++/philsophe
         run: make clean all
       - name: Run philosophe (bounded demo)
-        working-directory: philsophe
+        working-directory: C++/philsophe
         run: ./philosophe

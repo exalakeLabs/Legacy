@@ -1,131 +1,170 @@
-# Legacy
+# Legacy Software Archive
 
-A curated archive of C/C++ and Windows projects from the 1990s–2000s: demos, tests, sample code, and reusable components. Most projects target **Visual C++ 5/6**, **MFC**, **COM/ActiveX**, **Borland C++Builder**, or legacy **CORBA** ORBs. A few examples (notably **philsophe**) build on modern macOS and Linux with a standard C++17 toolchain.
+A curated collection of 43 programming projects, demonstrations, reusable
+components, and experiments from the 1990s and early 2000s.
 
-This repository preserves original source layouts and filenames. Folder names with spaces or special characters (e.g. `Proc&Thread`, `Dialog Wnd`) are intentional—renaming would break `.dsp`, `.bpr`, and `.vbp` project files.
+The archive is organized by implementation language:
+
+| Directory | Projects | Contents |
+|---|---:|---|
+| [`C++/`](C%2B%2B/) | 34 | C++, MFC, COM/ActiveX, Win32, OpenGL, and Borland C++Builder |
+| [`C/`](C/) | 5 | C, Win32 C, Windows CE, and C with x86 assembly |
+| [`Others/`](Others/) | 4 | Visual Basic, mixed C/C++/IDL CORBA, and historical archives |
+
+These projects are preserved primarily for study and historical reference.
+Most target discontinued operating systems, SDKs, compilers, or middleware and
+are not expected to build unchanged with a current toolchain.
 
 ## Quick start
 
-There is **no single root build**. Each top-level folder is an independent project or small collection. Open the folder’s `README.md` for purpose, dependencies, and build steps.
+There is no single root build. Each project is self-contained and usually has
+its own `README.md`, legacy IDE project file, or Makefile.
 
-| If you want to… | Start here |
-|-----------------|------------|
-| Build something on macOS/Linux today | [`philsophe/`](philsophe/) — `make` produces three concurrency demos |
-| Explore COM/ActiveX patterns | [`COMObject/`](COMObject/) + [`COMClient/`](COMClient/) |
-| Study Win32 synchronization | [`Process/`](Process/), [`Proc&Thread/`](Proc%26Thread/), [`ThreadTest/`](ThreadTest/) |
-| Browse the CORBA POS book example | [`CORBA/`](CORBA/) |
-| Run OpenGL on macOS (legacy GLUT) | [`OpenGLSurefire/`](OpenGLSurefire/) — requires OpenGL + GLUT frameworks |
+| Goal | Start here |
+|---|---|
+| Build a project on modern macOS or Linux | [`C++/philsophe/`](C%2B%2B/philsophe/) |
+| Study Win32 processes and synchronization | [`C++/Process/`](C%2B%2B/Process/) and [`C++/Proc&Thread/`](C%2B%2B/Proc%26Thread/) |
+| Explore COM, DCOM, and ActiveX | [`C++/COMObject/`](C%2B%2B/COMObject/), [`C++/COMClient/`](C%2B%2B/COMClient/), and [`C++/DCOM/`](C%2B%2B/DCOM/) |
+| Browse OpenGL demonstrations | [`C++/OpenGLSurefire/`](C%2B%2B/OpenGLSurefire/) and [`C++/texturemapping/`](C%2B%2B/texturemapping/) |
+| Study a legacy game codebase | [`C/Wolf3DSrc/`](C/Wolf3DSrc/) |
+| Compare historical CORBA implementations | [`Others/CORBA/`](Others/CORBA/) |
 
-## Contents by category
+## C++ projects
 
-### Concurrency and processes
+### Windows, MFC, COM, and ActiveX
 
-| Folder | Description |
-|--------|-------------|
-| [`philsophe/`](philsophe/) | Dining-philosophers demos; cross-platform C++17 |
-| [`Proc&Thread/`](Proc%26Thread/) | Process and thread wait/signal examples |
-| [`Process/`](Process/) | Semaphores, mutexes, critical sections, events, overlapped I/O |
-| [`ThreadTest/`](ThreadTest/) | Thread creation and synchronization tests |
-| [`CreatePipe/`](CreatePipe/) | Named-pipe parent/child demo |
-| [`OldProcWrap/`](OldProcWrap/) | Legacy process-wrapper sample |
+| Project | Description |
+|---|---|
+| [`ActiveListBoxTest`](C%2B%2B/ActiveListBoxTest/) | MFC test host for the Visual Basic ActiveListBox control |
+| [`CLSIDTest`](C%2B%2B/CLSIDTest/) | COM class/category identifier lookup experiment |
+| [`COMClient`](C%2B%2B/COMClient/) | MFC client for the COMObject in-process server |
+| [`COMObject`](C%2B%2B/COMObject/) | MFC/COM in-process automation server |
+| [`DCOM`](C%2B%2B/DCOM/) | Distributed drawing service, client, and control samples |
+| [`DLLTest`](C%2B%2B/DLLTest/) | Borland C++ DLL import/export experiments |
+| [`Dialog Wnd`](C%2B%2B/Dialog%20Wnd/) | Small diagnostic dialog/window helper |
+| [`dllDialog`](C%2B%2B/dllDialog/) | MFC dialog exported from a Windows DLL |
+| [`VisioPlugIn`](C%2B%2B/VisioPlugIn/) | Visio VSL add-on that diagrams network resources |
+| [`XFloorWnd`](C%2B%2B/XFloorWnd/) | ActiveX tabbed “floor” navigation control |
+| [`XPropertiesWnd`](C%2B%2B/XPropertiesWnd/) | ActiveX property and shell-tree controls |
 
-### COM, ActiveX, and DCOM
+### Processes, threads, and Win32 APIs
 
-| Folder | Description |
-|--------|-------------|
-| [`COMObject/`](COMObject/) | In-process COM server (MFC/ATL-style) |
-| [`COMClient/`](COMClient/) | MFC client for COMObject |
-| [`CLSIDTest/`](CLSIDTest/) | CLSID lookup and registration tests |
-| [`OCXREG/`](OCXREG/) | OCX registration utility |
-| [`DCOM/`](DCOM/) | DCOM draw server/client samples (DrawServ, DrawCtl, ATLDraw) |
-| [`dllDialog/`](dllDialog/) | Dialog exported from a DLL |
-| [`ActiveListBox/`](ActiveListBox/) | VB6 ActiveX control project |
-| [`ActiveListBoxTest/`](ActiveListBoxTest/) | MFC host for ActiveX control testing |
-| [`XPropertiesWnd/`](XPropertiesWnd/) | Property-sheet / shell-tree ActiveX control |
-| [`XFloorWnd/`](XFloorWnd/) | Tabbed “floor” navigation ActiveX control |
-| [`RemoteShell OCX/`](RemoteShell%20OCX/) | Remote-shell ActiveX experiment |
+| Project | Description |
+|---|---|
+| [`CreatePipe`](C%2B%2B/CreatePipe/) | Parent/child process communication through a named pipe |
+| [`OldProcWrap`](C%2B%2B/OldProcWrap/) | Legacy process-wrapper experiment |
+| [`Proc&Thread`](C%2B%2B/Proc%26Thread/) | Process, thread, wait, and signaling examples |
+| [`Process`](C%2B%2B/Process/) | Mutex, semaphore, event, critical-section, and overlapped-I/O samples |
+| [`shmemcr`](C%2B%2B/shmemcr/) | Shared-memory creator half of a paired example |
+| [`shmemop`](C%2B%2B/shmemop/) | Shared-memory opener half of a paired example |
+| [`ThreadTest`](C%2B%2B/ThreadTest/) | Windows thread creation and synchronization test |
+| [`Timer`](C%2B%2B/Timer/) | Win32 multimedia timer demonstration |
+| [`mapfile`](C%2B%2B/mapfile/) | Memory-mapped file examples |
 
-### CORBA
+### Graphics and user interfaces
 
-| Folder | Description |
-|--------|-------------|
-| [`CORBA/`](CORBA/) | POS example from *CORBA Fundamentals and Programming* — multiple ORB ports |
+| Project | Description |
+|---|---|
+| [`C++Builder`](C%2B%2B/C%2B%2BBuilder/) | Borland C++Builder components, database, bitmap, service, and OpenGL samples |
+| [`OpenGLSurefire`](C%2B%2B/OpenGLSurefire/) | OpenGL/GLUT texture and rendering demonstration |
+| [`qknots`](C%2B%2B/qknots/) | Quaternion-knot visualization |
+| [`RGBtoGLByte`](C%2B%2B/RGBtoGLByte/) | RGB image conversion for OpenGL byte data |
+| [`texturemapping`](C%2B%2B/texturemapping/) | Texture mapping, lighting, transparency, Gouraud shading, and antialiasing demos |
 
-### Graphics and OpenGL
+### Algorithms, containers, and language experiments
 
-| Folder | Description |
-|--------|-------------|
-| [`OpenGLSurefire/`](OpenGLSurefire/) | OpenGL/GLUT demo (macOS Makefile) |
-| [`qknots/`](qknots/) | Quaternion knot visualization |
-| [`texturemapping/`](texturemapping/) | OpenGL texture-mapping package demos |
-| [`RGBtoGLByte/`](RGBtoGLByte/) | RGB to OpenGL byte conversion utility |
-| [`Wolf3DSrc/`](Wolf3DSrc/) | Wolfenstein 3D–era engine sources (Borland C++ 3.x) |
+| Project | Description |
+|---|---|
+| [`Bin Tree`](C%2B%2B/Bin%20Tree/) | Header-only template binary tree |
+| [`ExceptionTest`](C%2B%2B/ExceptionTest/) | C++ exception-handling experiment |
+| [`fstreamTest`](C%2B%2B/fstreamTest/) | Standard stream and file-I/O test |
+| [`LISTS`](C%2B%2B/LISTS/) | Linked-list implementation and test |
+| [`math`](C%2B%2B/math/) | Small numerical routine experiment |
+| [`Matrix`](C%2B%2B/Matrix/) | Matrix class and test harness |
+| [`philsophe`](C%2B%2B/philsophe/) | Modern C++17 dining-philosophers concurrency demos |
+| [`QSort`](C%2B%2B/QSort/) | Quicksort implementation and test |
 
-### Win32 system APIs
+### Platform-specific samples
 
-| Folder | Description |
-|--------|-------------|
-| [`Timer/`](Timer/) | Multimedia timer (`timeSetEvent`) demo |
-| [`mapfile/`](mapfile/) | Memory-mapped file I/O |
-| [`shmemcr/`](shmemcr/) / [`shmemop/`](shmemop/) | Shared-memory creator/operator pair |
-| [`winsock/`](winsock/) | Winsock sample |
-| [`winCE Winsock/`](winCE%20Winsock/) | Windows CE socket test |
-| [`Dialog Wnd/`](Dialog%20Wnd/) | Diagnostic message-box helper library |
+| Project | Description |
+|---|---|
+| [`dvcrpage`](C%2B%2B/dvcrpage/) | Borland C++Builder device-context page sample |
 
-### Data structures and math
+## C projects
 
-| Folder | Description |
-|--------|-------------|
-| [`Bin Tree/`](Bin%20Tree/) | Template binary tree header (`Bintree.h`) |
-| [`LISTS/`](LISTS/) | Linked-list utilities |
-| [`QSort/`](QSort/) | Quicksort demo |
-| [`MATH/`](MATH/) | Math routines |
-| [`Matrix/`](Matrix/) | Matrix class and test harness |
+| Project | Description |
+|---|---|
+| [`main-puzzle`](C/main-puzzle/) | IOCCC-style obfuscated recursive C program |
+| [`OCXREG`](C/OCXREG/) | Command-line utility for registering OCX controls |
+| [`winCE Winsock`](C/winCE%20Winsock/) | Windows CE socket test |
+| [`winsock`](C/winsock/) | Classic Win32 Winsock client/server sample |
+| [`Wolf3DSrc`](C/Wolf3DSrc/) | Wolfenstein 3D–era C and x86 assembly sources for Borland C++ 3.x |
 
-### C++Builder / Borland
+## Other and mixed-language projects
 
-| Folder | Description |
-|--------|-------------|
-| [`C++Builder/`](C%2B%2BBuilder/) | Components, DB connectivity, OpenGL, bitmap demos |
-| [`DLLTest/`](DLLTest/) | DLL export/import tests |
-| [`dvcrpage/`](dvcrpage/) | Device-context page demo |
+| Project | Language or format | Description |
+|---|---|---|
+| [`ActiveListBox`](Others/ActiveListBox/) | Visual Basic 6 | ActiveX list-box control |
+| [`CORBA`](Others/CORBA/) | C, C++, IDL, and build scripts | Point-of-sale example ported across multiple historical CORBA ORBs |
+| [`RemoteShell OCX`](Others/RemoteShell%20OCX/) | Visual Basic 6 / packaged OCX | Remote-shell ActiveX control and test application |
+| [`archives`](Others/archives/) | ZIP archives | Original historical packages retained for reference |
 
-### Tools, tests, and misc
+## Toolchains and compatibility
 
-| Folder | Description |
-|--------|-------------|
-| [`ExceptionTest/`](ExceptionTest/) | C++ exception handling demo |
-| [`fstreamTest/`](fstreamTest/) | Standard fstream I/O test |
-| [`surlecul/`](surlecul/) | IOCCC-style obfuscated C curiosity |
-| [`VisioPlugIn/`](VisioPlugIn/) | Visio VSL add-on: enumerate network resources |
-| [`archives/`](archives/) | Historical zip archives (not built from source here) |
+| Toolchain or dependency | Typical projects |
+|---|---|
+| Visual C++ 5/6 (`.dsp`, `.dsw`) | Most MFC, Win32, COM, and OpenGL projects |
+| Visual Basic 6 (`.vbp`, `.frm`, `.ctl`) | ActiveListBox and RemoteShell OCX |
+| Borland C++Builder (`.bpr`, `.bpg`, `.dfm`) | C++Builder, DLLTest, and dvcrpage |
+| Borland C++ 3.x and an x86 assembler | Wolf3DSrc |
+| Legacy CORBA ORB and IDL compiler | CORBA subprojects |
+| Modern Clang or GCC with C++17 threads | philsophe |
 
-## Build expectations
+Legacy Visual Studio files often contain relative paths and assumptions about
+SDK installation directories. Moving a complete project folder into its
+language category preserves paths internal to that folder, but machine-specific
+toolchain paths may still require adjustment.
 
-| Toolchain | Typical projects |
-|-----------|------------------|
-| **Visual C++ 5/6** (`.dsp`, `.dsw`) | Most Win32, MFC, COM samples |
-| **Visual Basic 6** (`.vbp`) | ActiveListBox |
-| **Borland C++Builder** (`.bpr`, `.bpg`) | C++Builder/, DLLTest, Wolf3DSrc |
-| **Borland C++ 3.x** | Wolf3DSrc |
-| **Modern clang++/g++** | philsophe (C++17, pthreads) |
-| **Legacy CORBA ORB + make** | CORBA/ subdirectories |
+## Building the modern C++ example
 
-Generated IDE folders (`Debug/`, `Release/`, `.ncb`, etc.) may appear in the tree from original development; they are not required to build from source.
+The dining-philosophers project is the only project exercised by continuous
+integration:
 
-## Documentation convention
+```sh
+cd "C++/philsophe"
+make clean all
+./philosophe
+```
 
-- **`README.md`** — Primary entry point for each folder (purpose, build, run).
-- **`ReadMe.txt` / `README.TXT`** — Original notes preserved from the era of the code; linked or summarized in the Markdown README where relevant.
+The other projects should be built from inside their individual directories
+with the compiler or IDE documented in their local README.
 
-## CI
+## Repository conventions
 
-GitHub Actions builds the cross-platform [`philsophe`](philsophe/) project on push/PR to `main`. Most Windows-only projects are not compiled in CI; build them locally with the appropriate legacy IDE.
+- `README.md` provides modern navigation and build notes.
+- `ReadMe.txt`, `README.TXT`, and similar files preserve original documentation.
+- Original filenames and project-internal layouts are retained where practical.
+- Generated compiler and linker artifacts are excluded by the root `.gitignore`.
+- Historical binaries already committed to the archive remain available for
+  research, even when files with the same extensions are now ignored.
 
-## License
+## Continuous integration
 
-See [`LICENSE`](LICENSE) (LGPL 2.1) for repository-level terms. Individual subprojects may carry their own copyright notices (e.g. CORBA POS example — OMG/Wiley 1996; Scott Robert Ladd components; Visio Corporation SDK headers in VisioPlugIn).
+The GitHub Actions smoke test builds and runs
+[`C++/philsophe`](C%2B%2B/philsophe/) on Ubuntu. Windows-only and
+middleware-dependent projects are not compiled in CI.
 
-## Archives
+## License and third-party notices
 
-Historical material that is not part of the buildable source tree lives under [`archives/`](archives/).
+Repository-level terms are in [`LICENSE`](LICENSE) (LGPL 2.1). Some imported
+examples and SDK materials include their own notices, including the CORBA POS
+example, third-party C++ components, and historical Visio SDK headers. Review
+the documentation and source headers within a project before redistributing it.
+
+## Archive status
+
+This repository favors preservation over modernization. A successful build may
+require a virtual machine, an older Windows SDK, original middleware, or small
+source changes for modern compiler compatibility. Contributions that improve
+documentation, portability, or reproducibility should preserve the intent and
+history of the original examples.
