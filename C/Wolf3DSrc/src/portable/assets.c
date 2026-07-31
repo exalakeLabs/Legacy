@@ -1,5 +1,11 @@
 #include "wolf3d/assets.h"
 
+#include "wolf3d/paths.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 bool wolf_huff_expand(const wolf_u8 *source, size_t source_size,
                       wolf_u8 *dest, size_t dest_size,
                       const wolf_huffnode table[255])
@@ -103,4 +109,123 @@ bool wolf_rlew_expand(const wolf_u16 *source, size_t source_words,
             dest[out++] = repeated;
     }
     return true;
+}
+
+static bool read_file(const char *path, wolf_u8 **data, size_t *size)
+{
+    FILE *file = fopen(path, "rb");
+    long length;
+    if (!file || fseek(file, 0, SEEK_END) != 0 || (length = ftell(file)) < 0 ||
+        fseek(file, 0, SEEK_SET) != 0) {
+        if (file) fclose(file);
+        return false;
+    }
+    *data = malloc((size_t)length ? (size_t)length : 1);
+    if (!*data || fread(*data, 1, (size_t)length, file) != (size_t)length) {
+        free(*data);
+        *data = NULL;
+        fclose(file);
+        return false;
+    }
+    fclose(file);
+    *size = (size_t)length;
+    return true;
+}
+
+bool wolf_graphics_open(wolf_graphics *graphics, const char *directory,
+                        const char *extension)
+{
+    char name[64], path[1024];
+    wolf_u8 *dictionary = NULL, *header = NULL;
+    size_t dictionary_size = 0, header_size = 0;
+    memset(graphics, 0, sizeof(*graphics));
+
+    snprintf(name, sizeof(name), "VGADICT.%s", extension);
+    if (!wolf_find_data_file(directory, name, path, sizeof(path)) ||
+        !read_file(path, &dictionary, &dictionary_size) || dictionary_size < 255 * 4)
+        goto failed;
+    for (size_t i = 0; i < 255; ++i) {
+        graphics->dictionary[i].bit0 = wolf_read_le16(dictionary + i * 4);
+        graphics->dictionary[i].bit1 = wolf_read_le16(dictionary + i * 4 + 2);
+    }
+
+    snprintf(name, sizeof(name), "VGAHEAD.%s", extension);
+    if (!wolf_find_data_file(directory, name, path, sizeof(path)) ||
+        !read_file(path, &header, &header_size) || header_size % 3 != 0)
+        goto failed;
+    graphics->offset_count = header_size / 3;
+    graphics->offsets = malloc(graphics->offset_count * sizeof(*graphics->offsets));
+    if (!graphics->offsets)
+        goto failed;
+    for (size_t i = 0; i < graphics->offset_count; ++i)
+        graphics->offsets[i] = wolf_read_le24(header + i * 3);
+
+    snprintf(name, sizeof(name), "VGAGRAPH.%s", extension);
+    if (!wolf_find_data_file(directory, name, path, sizeof(path)) ||
+        !read_file(path, &graphics->archive, &graphics->archive_size))
+        goto failed;
+    free(dictionary);
+    free(header);
+    return true;
+failed:
+    free(dictionary);
+    free(header);
+    wolf_graphics_close(graphics);
+    return false;
+}
+
+void wolf_graphics_close(wolf_graphics *graphics)
+{
+    if (!graphics) return;
+    free(graphics->offsets);
+    free(graphics->archive);
+    memset(graphics, 0, sizeof(*graphics));
+}
+
+bool wolf_graphics_load_screen(const wolf_graphics *graphics, size_t chunk,
+                               wolf_framebuffer *framebuffer)
+{
+    enum { PLANAR_SCREEN_SIZE = WOLF_SCREEN_WIDTH * WOLF_SCREEN_HEIGHT };
+    wolf_u8 *planar = NULL;
+    size_t next = chunk + 1;
+    if (!graphics || !framebuffer || chunk >= graphics->offset_count ||
+        graphics->offsets[chunk] == UINT32_C(0xffffff))
+        return false;
+    while (next < graphics->offset_count && graphics->offsets[next] == UINT32_C(0xffffff))
+        ++next;
+    if (next >= graphics->offset_count)
+        return false;
+    const size_t start = graphics->offsets[chunk];
+    const size_t end = graphics->offsets[next];
+    if (start + 4 > end || end > graphics->archive_size ||
+        wolf_read_le32(graphics->archive + start) != PLANAR_SCREEN_SIZE)
+        return false;
+    planar = malloc(PLANAR_SCREEN_SIZE);
+    if (!planar || !wolf_huff_expand(graphics->archive + start + 4, end - start - 4,
+                                     planar, PLANAR_SCREEN_SIZE, graphics->dictionary)) {
+        free(planar);
+        return false;
+    }
+    for (size_t y = 0; y < WOLF_SCREEN_HEIGHT; ++y)
+        for (size_t x = 0; x < WOLF_SCREEN_WIDTH; ++x)
+            framebuffer->pixels[y * WOLF_SCREEN_WIDTH + x] =
+                planar[(x & 3u) * (PLANAR_SCREEN_SIZE / 4) + y * 80 + (x >> 2)];
+    free(planar);
+    return true;
+}
+
+bool wolf_graphics_find_screen(const wolf_graphics *graphics, size_t first_chunk,
+                               size_t *chunk)
+{
+    const wolf_u32 screen_size = WOLF_SCREEN_WIDTH * WOLF_SCREEN_HEIGHT;
+    if (!graphics || !chunk) return false;
+    for (size_t i = first_chunk; i < graphics->offset_count; ++i) {
+        const wolf_u32 offset = graphics->offsets[i];
+        if (offset != UINT32_C(0xffffff) && offset + 4 <= graphics->archive_size &&
+            wolf_read_le32(graphics->archive + offset) == screen_size) {
+            *chunk = i;
+            return true;
+        }
+    }
+    return false;
 }

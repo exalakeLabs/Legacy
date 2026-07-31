@@ -34,6 +34,23 @@ void wolf_fb_set_palette(wolf_framebuffer *fb, const wolf_u8 *vga_palette)
         }
 }
 
+void wolf_fb_set_fallback_palette(wolf_framebuffer *fb)
+{
+    static const wolf_u8 ega[16][3] = {
+        {0,0,0},{0,0,42},{0,42,0},{0,42,42},{42,0,0},{42,0,42},{42,21,0},{42,42,42},
+        {21,21,21},{21,21,63},{21,63,21},{21,63,63},{63,21,21},{63,21,63},{63,63,21},{63,63,63}
+    };
+    wolf_u8 palette[WOLF_PALETTE_SIZE * 3];
+    for (unsigned i = 0; i < 16; ++i)
+        memcpy(palette + i * 3, ega[i], 3);
+    for (unsigned i = 16; i < WOLF_PALETTE_SIZE; ++i) {
+        palette[i * 3] = (wolf_u8)(((i >> 5) & 7u) * 9u);
+        palette[i * 3 + 1] = (wolf_u8)(((i >> 2) & 7u) * 9u);
+        palette[i * 3 + 2] = (wolf_u8)((i & 3u) * 21u);
+    }
+    wolf_fb_set_palette(fb, palette);
+}
+
 void wolf_fb_to_argb8888(const wolf_framebuffer *fb, wolf_u32 *dest, size_t pixels)
 {
     const size_t count = pixels < sizeof(fb->pixels) ? pixels : sizeof(fb->pixels);

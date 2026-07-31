@@ -14,6 +14,7 @@ void wolf_fb_clear(wolf_framebuffer *fb, wolf_u8 color);
 void wolf_fb_plot(wolf_framebuffer *fb, int x, int y, wolf_u8 color);
 void wolf_fb_bar(wolf_framebuffer *fb, int x, int y, int width, int height, wolf_u8 color);
 void wolf_fb_set_palette(wolf_framebuffer *fb, const wolf_u8 *vga_palette);
+void wolf_fb_set_fallback_palette(wolf_framebuffer *fb);
 void wolf_fb_to_argb8888(const wolf_framebuffer *fb, wolf_u32 *dest, size_t pixels);
 
 #endif

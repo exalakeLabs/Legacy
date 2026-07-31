@@ -28,12 +28,13 @@ run with `make test`.
 - SDL3 window, nearest-neighbor presentation, events, and a 70 Hz fixed-step
   timing scaffold.
 - Case-tolerant DOS data-file discovery and `--data-dir` support.
+- `.WL1`/`.WL6` graphics archive loading and planar `TITLEPIC` presentation.
 - Versioned, pointer-free text configuration and XDG path discovery.
 - Headless tests and initial Linux desktop packaging metadata.
 
 ## Still required for a playable game
 
-- Connect the original cache manager to the portable decompressors.
+- Connect the remaining original cache-manager chunk types to the portable decompressors.
 - Translate `WL_DR_A.ASM` and scaler generation to framebuffer-based C.
 - Map SDL keyboard, mouse, and gamepad state onto the original `IN_*` API.
 - Mix digitized sounds and connect an OPL2 emulator to the `SD_*` API.

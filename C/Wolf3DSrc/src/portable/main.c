@@ -1,3 +1,4 @@
+#include "wolf3d/assets.h"
 #include "wolf3d/framebuffer.h"
 #include "wolf3d/paths.h"
 #include "wolf3d/platform.h"
@@ -40,6 +41,13 @@ static bool verify_data(const char *directory)
     return false;
 }
 
+static const char *data_extension(const char *directory)
+{
+    if (verify_data_variant(directory, "WL6", true)) return "WL6";
+    if (verify_data_variant(directory, "WL1", true)) return "WL1";
+    return NULL;
+}
+
 int main(int argc, char **argv)
 {
     const char *data_directory = ".";
@@ -56,7 +64,11 @@ int main(int argc, char **argv)
             return 2;
         }
     }
-    verify_data(data_directory);
+    const char *extension = data_extension(data_directory);
+    if (!extension && !smoke_test) {
+        verify_data(data_directory);
+        return 2;
+    }
 
     wolf_platform *platform = wolf_platform_create("Wolfenstein 3D portable", 4);
     if (!platform) {
@@ -64,10 +76,21 @@ int main(int argc, char **argv)
         return 1;
     }
     wolf_framebuffer fb = {0};
-    for (unsigned i = 0; i < WOLF_PALETTE_SIZE; ++i) {
-        fb.palette[i][0] = (wolf_u8)i;
-        fb.palette[i][1] = (wolf_u8)(i / 2);
-        fb.palette[i][2] = (wolf_u8)(255 - i);
+    wolf_fb_set_fallback_palette(&fb);
+    wolf_graphics graphics = {0};
+    bool title_loaded = false;
+    if (extension) {
+        size_t title_chunk = 0;
+        title_loaded = wolf_graphics_open(&graphics, data_directory, extension) &&
+                       wolf_graphics_find_screen(&graphics, 80, &title_chunk) &&
+                       wolf_graphics_load_screen(&graphics, title_chunk, &fb);
+        if (!title_loaded) {
+            fprintf(stderr, "could not decode TITLEPIC from the .%s graphics archive\n", extension);
+            wolf_graphics_close(&graphics);
+            wolf_platform_destroy(platform);
+            return 1;
+        }
+        fprintf(stderr, "loaded TITLEPIC-compatible screen from graphics chunk %zu\n", title_chunk);
     }
 
     const wolf_u64 tick_period = UINT64_C(1000000000) / 70;
@@ -83,14 +106,17 @@ int main(int argc, char **argv)
             accumulator -= tick_period;
             ++ticks;
         }
-        wolf_fb_clear(&fb, (wolf_u8)(ticks / 2));
-        wolf_fb_bar(&fb, 32, 76, 256, 48, (wolf_u8)(ticks + 64));
+        if (!title_loaded) {
+            wolf_fb_clear(&fb, (wolf_u8)(ticks / 2));
+            wolf_fb_bar(&fb, 32, 76, 256, 48, (wolf_u8)(ticks + 64));
+        }
         running = wolf_platform_pump(platform);
         wolf_platform_present(platform, &fb);
         if (smoke_test)
             running = false;
         wolf_platform_delay(1);
     }
+    wolf_graphics_close(&graphics);
     wolf_platform_destroy(platform);
     return 0;
 }
