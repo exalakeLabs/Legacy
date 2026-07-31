@@ -16,4 +16,4 @@ Legacy reference material only. **Do not contact id Software** with questions ab
 
 Additional notes and license text: [`README/`](README/) subfolder (`README.TXT`, `LICENSE.DOC`).
 
-See the parent repository [**README**](../README.md) for archive context.
+See the repository [**README**](../../README.md) for archive context.
