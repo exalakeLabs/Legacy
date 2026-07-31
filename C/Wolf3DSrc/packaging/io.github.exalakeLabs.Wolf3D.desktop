@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Wolfenstein 3D Portable
+Comment=Portable Wolfenstein 3D engine
+Exec=wolf3d-port
+Icon=io.github.exalakeLabs.Wolf3D
+Categories=Game;ActionGame;
+Terminal=false
