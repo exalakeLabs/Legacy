@@ -1,3 +1,7 @@
 # DAIS
 
-**DAIS ORB** implementation of the CORBA POS example. See the main **CORBA** README for the example; use this folder’s Makefile or scripts to build and run with the DAIS ORB.
+**DAIS ORB** implementation of the CORBA POS example.
+
+Contains DAIS-specific sources and Makefiles for the central, store, POS, and PNS processes described in *CORBA Fundamentals and Programming*.
+
+Requires a DAIS ORB installation and IDL toolchain from the vendor era. See the main [**CORBA** README](../README.md) and any local README/Makefile in this folder.

@@ -1,8 +1,26 @@
 # VisioPlugIn
 
-MFC **DLL** project named “NetInfo”: network-information or similar functionality, intended to integrate with or extend Visio (e.g. as a plug-in or helper). The DLL exports the `CNetInfoApp` class and standard MFC DLL entry points. See `visio` subfolder for Visio-specific code if present.
+MFC **Visio VSL (Visio Solution Library)** add-on named **NetInfo**, generated with the “MFC VAddon VSL Wizard” (Visio Corporation, 1997).
 
-## Build and run
+## What it does
 
-- Visual C++: build the NetInfo DLL project.
-- Deploy/load the DLL in the environment where Visio (or the target app) can load it; registration and load steps depend on your Visio integration design.
+The **&Network Resources** add-on (`vNetInfo.cpp`) enumerates Windows networking resources via `CNetworkResourceCollector`, then draws the hierarchy on the active Visio page using `CNetworkResource` shapes (`NetworkResource.cpp`, `NetworkResourceCollector.cpp`).
+
+Requires **Microsoft Visio** (4.x era) with VSL load support and the Visio automation headers in [`visio/`](visio/).
+
+## Layout
+
+| Path | Role |
+|------|------|
+| `NetInfo.dsp` | Visual C++ 6 project |
+| `vNetInfo.cpp` / `vNetInfo.h` | VAddon subclass (Run, About, Load) |
+| `NetworkResource*.cpp` | Shape tree for NETRESOURCE hierarchy |
+| [`visio/`](visio/) | Visio SDK: VAO, automation proxies, add-in entry points |
+
+## Build and deploy
+
+1. Build `NetInfo.dll` with Visual C++ 6 and MFC.
+2. Register/load the VSL per Visio’s add-on documentation for your Visio version.
+3. In Visio, run the **Network Resources** add-on to populate the diagram.
+
+Original AppWizard boilerplate: [`ReadMe.txt`](ReadMe.txt).

@@ -1,3 +1,5 @@
 # TOpenGLPanel
 
-**TOpenGLPanel** component for C++Builder: panel control that hosts OpenGL rendering. Part of the C++BuilderComponent package; install the package to use on forms. See parent **C++BuilderComponent** README.
+**TOpenGLPanel** — panel control that owns an OpenGL rendering context. Primary component consumed by [**OpenGLPerspective**](../../OpenGLPerspective/) (`#pragma link "TOpenGLPanel"`).
+
+Install via the parent [**C++BuilderComponent**](../README.md) package before building dependent demos.

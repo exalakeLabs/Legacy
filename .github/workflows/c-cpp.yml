@@ -1,4 +1,4 @@
-name: C/C++ CI
+name: Cross-platform smoke build
 
 on:
   push:
@@ -7,17 +7,13 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
-
+  philsophe:
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v4
-    - name: configure
-      run: ./configure
-    - name: make
-      run: make
-    - name: make check
-      run: make check
-    - name: make distcheck
-      run: make distcheck
+      - uses: actions/checkout@v4
+      - name: Build philsophe (C++17 concurrency demos)
+        working-directory: philsophe
+        run: make clean all
+      - name: Run philosophe (bounded demo)
+        working-directory: philsophe
+        run: ./philosophe

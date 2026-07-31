@@ -1,3 +1,5 @@
 # TOpenGL
 
-**TOpenGL** component sources (or variant) for the C++Builder OpenGL package. Build and install the parent C++BuilderComponent package to use in the IDE. See **C++BuilderComponent** README.
+**TOpenGL** component sources—OpenGL-enabled VCL control registered with the C++Builder IDE as part of the [**C++BuilderComponent**](../README.md) package.
+
+Build and install the parent package, then use TOpenGL on forms requiring embedded OpenGL. See **TOpenGLPanel** for the panel-based variant used by **OpenGLPerspective**.
