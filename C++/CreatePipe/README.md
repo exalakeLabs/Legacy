@@ -10,4 +10,5 @@ Win32 demo that uses **anonymous pipes** to capture a child process’s stdout a
 
 ## Related
 
-- **OldProcWrap** — Similar “wrap process and monitor stdout/stderr” idea; see that folder’s README.
+- [`OldProcWrap`](../OldProcWrap/) — A related prototype for wrapping a process
+  and monitoring its standard output and error streams.

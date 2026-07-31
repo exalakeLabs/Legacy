@@ -2,6 +2,9 @@
 
 Prototype for **wrapping a child process** and monitoring its stdout/stderr. Uses `CreatePipe` to get read/write handles, sets the child’s standard handles in `STARTUPINFO`, and launches the process (e.g. `bsp.exe`); the parent reads from the pipe and can display output or detect error messages. Similar in purpose to **CreatePipe**; this version may use a larger buffer (e.g. 32 KB).
 
+The related [`CreatePipe`](../CreatePipe/) folder preserves another iteration
+of the same experiment.
+
 ## Build and run
 
 - Visual C++: open the workspace/project in this folder (e.g. `main.cpp`), build.

@@ -3,13 +3,14 @@
 A curated collection of 43 programming projects, demonstrations, reusable
 components, and experiments from the 1990s and early 2000s.
 
-The archive is organized by implementation language:
+The archive is organized by implementation language. Each category has its own
+guide with toolchain, output-type, and compatibility details:
 
 | Directory | Projects | Contents |
 |---|---:|---|
-| [`C++/`](C%2B%2B/) | 34 | C++, MFC, COM/ActiveX, Win32, OpenGL, and Borland C++Builder |
-| [`C/`](C/) | 5 | C, Win32 C, Windows CE, and C with x86 assembly |
-| [`Others/`](Others/) | 4 | Visual Basic, mixed C/C++/IDL CORBA, and historical archives |
+| [`C++/`](C%2B%2B/README.md) | 34 | C++, MFC, COM/ActiveX, Win32, OpenGL, and Borland C++Builder |
+| [`C/`](C/README.md) | 5 | C, Win32 C, Windows CE, and C with x86 assembly |
+| [`Others/`](Others/README.md) | 4 | Visual Basic, mixed C/C++/IDL CORBA, and historical archives |
 
 These projects are preserved primarily for study and historical reference.
 Most target discontinued operating systems, SDKs, compilers, or middleware and

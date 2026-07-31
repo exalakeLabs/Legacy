@@ -1,6 +1,12 @@
 # ActiveListBox
 
-**Visual Basic** control project: `AlexControls.vbp` defines an ActiveX control (or control suite) named AlexControls. Produces `.ctl`, `.tcs`, and optionally `.dll`/`.ocx` for use in VB or other ActiveX containers. Use **ActiveListBoxTest** (MFC dialog app) to test the control in a C++ host if desired.
+**Visual Basic 6** control project: `AlexControls.vbp` defines an ActiveX
+control suite named AlexControls. `AlexControls.ctl` contains the control
+implementation, while the project and workspace files capture its original VB6
+development environment.
+
+Use [`ActiveListBoxTest`](../../C%2B%2B/ActiveListBoxTest/) to exercise the
+control from an MFC host.
 
 ## Build and run
 

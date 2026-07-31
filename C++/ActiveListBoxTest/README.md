@@ -1,7 +1,12 @@
 # ActiveListBoxTest
 
-MFC **dialog-based** app “DialogTester” for testing an Active ListBox (or other list) control. AppWizard-generated; the main UI is a dialog. Use it to try out listbox behavior, custom controls, or as a host for ActiveX list controls.
+MFC **dialog-based** application “DialogTester” for hosting and exercising the
+Visual Basic [`ActiveListBox`](../../Others/ActiveListBox/) control. Generated
+Automation wrapper files (`_activelistbox.cpp` and `_activelistbox.h`) expose
+the control to the C++ dialog.
 
 ## Build and run
 
 - Visual C++: `DialogTester.dsp` (or the project file in this folder). Build and run the executable.
+- Build and register ActiveListBox first, then make the control available to the
+  dialog project through the original ActiveX references.
