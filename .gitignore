@@ -15,6 +15,7 @@
 *.pdb
 *.pch
 *.res
+C++/OpenGLSurefire/surefire
 
 # Build directories
 [Bb]uild/
@@ -44,3 +45,5 @@ __pycache__/
 .pytest_cache/
 .venv/
 venv/
+C++/OpenGLSurefire/surefire
+C++/OpenGLSurefire/surefire
